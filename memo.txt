@@ -1,0 +1,140 @@
+Document Object Model (DOM)
+
+# 要素操作関数
+document.querySelector('h1').textContent = 'Changed!';
+document.querySelector('#target').textContent = 'Changed!';
+document.getElementByID('target').textContent = 'Changed!';
+
+document.querySelectorAll('p').forEach((p, index) => {
+  p.textContent = `${index}番目のpです！`;
+});
+
+# jsではデザインの変更は推奨されない(デザインはcss)
+{
+  document.querySelector('button').addEventListener('click', () => {
+    const targetNode = document.getElementById('target');
+    targetNode.textContent = 'Changed!';
+    targetNode.title = 'This is title!';
+    targetNode.style.color = 'red';
+    targetNode.style.backgroundColor = 'skyblue';
+  });
+} 
+
+# htmlタグのクラス関数
+ targetNode.className = 'my-color my-border'; // クラスの書き換え
+ targetNode.classList.add('my-color');  // クラスの追加
+
+# classの有無を判定して追加したり除去したりできる
+    if ( targetNode.classList.contains('my-color') === true ) {
+      targetNode.classList.remove('my-color');
+    } else {
+      targetNode.classList.add('my-color');
+    }
+    targetNode.classList.taggle('my-color');  // ↑と全く同じ処理を1行で
+
+# 値の書き換え
+  targetNode.textContent = targetNode.dataset.translation;  // 要素の内容を書き換えることができる
+
+# 項目の追加
+    const items2 = document.createElement('li');  // 1. li要素を作る
+    items2.textContent = 'item 2';  // 2. 中身のテキストを設定する
+    
+    // const ulNode = document.querySelector('ul');
+    const ul = document.querySelector('ul');  // 追加したいツリー(ul)を選択
+    ul.appendChild(items2); // 3. DOMツリーに追加する
+
+# 項目の複製
+    const item0 = document.querySelectorAll('li')[0]; // 複製要素の選択
+    const copy = item0.cloneNode(true); // 複製
+
+    const ul = document.querySelector('ul');  // 複製したいツリーの選択
+    const items2 = document.querySelectorAll('li')[2];  // 複製した要素の挿入位置の選択
+    ul.insertBefore(copy, items2);  // 挿入位置より複製したものを挿入
+
+＃ 項目の削除
+  const item1 = document.querySelectorAll('li')[1];
+  item1.remove(); // 一部の古いブラウザでは動作しない場合あり
+  // 親Node.removeChild(削除するNode)
+  document.querySelector('ul').removeChild(item1);  // 古いブラウザでも対応
+
+# 項目の追加
+    const li = document.createElement('li');  // 子ノード('li')生成
+    const text = document.querySelector('input');  // 値を変数に代入
+    li.textContent = text.value;  // 子ノード('li')に値の代入
+    document.querySelector('ul').appendChild(li); // 親ノード('ul')に子ノード('li')を追加
+
+    text.value = '';  // 空にする
+    text.focus();   // 反映
+
+# 選択フォームでの項目追加
+{
+  document.querySelector('button').addEventListener('click', () => {
+    const li = document.createElement('li');  // リストを代入
+    const color = document.querySelector('select'); // 選択された色を代入
+    li.textContent = `${color.value} - ${color.selectedIndex}`; // liのテキスト追加
+    document.querySelector('ul').appendChild(li); // リスト追加
+  });
+} 
+
+# ラジオフォームでの項目追加
+{
+  document.querySelector('button').addEventListener('click', () => {
+    const colors = document.querySelectorAll('input');
+    let selectedColor;
+    
+    colors.forEach(color => {
+      if (color.checked === true) {
+        selectedColor = color.value;
+      }
+    });
+    const li =document.createElement('li');
+    li.textContent = selectedColor;
+    document.querySelector('ul').appendChild(li);
+  });
+}
+
+# 様々なイベント
+{
+  document.querySelector('button').addEventListener('dblclick', () => { // ダブルクリックで発動
+    console.log("Double Click!!");
+  });
+
+  document.addEventListener('mousemove', e => {  // マウスを動かすと発動
+    console.log(e.clientX, e.clientY);  // ポインタのX,Y座標取得
+  });
+
+  document.addEventListener('keydown', e => {  // キーボードのkeyを押すと発動
+    console.log(e.key); // 何のkeyを押したか出力
+  });
+} 
+
+# フォームで使われるイベント
+{
+  const text = document.querySelector('textarea');
+
+  text.addEventListener('focus', () => {  // 入力フォームにフォーカスされると発動
+    console.log('focus');
+  });
+
+  text.addEventListener('blur', () => { // 入力フォームにフォーカスが外れると発動
+    console.log('blur');
+  });
+
+  text.addEventListener('input', () => {  //  入力されると発動
+    // console.log('input');
+    console.log(text.value);
+  });
+
+  text.addEventListener('change', () => { // 中身に変化があると発動
+    console.log('change');
+  });
+} 
+
+# フォームを送信しよう
+<form></form>フォームタグがあることでボタンなしでEnterキーで送信可能
+{
+  document.querySelector('form').addEventListener('submit', e => {  // formタブの中身のボタンが押されたときに発動
+    e.preventDefault(); // 送信後のページ遷移を防ぐ
+    console.log('submit');
+  });
+} 
